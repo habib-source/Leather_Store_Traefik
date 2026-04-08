@@ -1,0 +1,21 @@
+services:
+  traefik:
+    restart: always
+    image: traefik:v3.6
+    container_name: traefik
+    environment:
+      TRAEFIK_API_INSECURE: true
+      TRAEFIK_PROVIDERS_DOCKER: true
+      TRAEFIK_ENTRYPOINTS_WEB_ADDRESS: ":80"
+    labels:
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.docker.localhost`)"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - proxy
+networks:
+  proxy:
+    name: proxy

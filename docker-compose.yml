@@ -1,0 +1,44 @@
+services:
+  leather_store:
+    restart: always
+    scale: 3
+    image: hqbib/leather_store:5
+    depends_on:
+      - database
+    environment:
+      DB_NAME: leather_store
+      DB_USER: habib
+      DB_PASSWORD: web
+      PGPASSWORD: web
+      DB_HOST: database
+      DB_PORT: 5432
+      ADMIN_USER_NAME: admin
+      ADMIN_USER_EMAIL: admini@leather-store.com
+      ADMIN_USER_PWD: admin
+      URL: http://leather_store.localhost/
+      DEBUG: false
+    env_file:
+      - .dockerenv
+    labels:
+      - "traefik.http.routers.leather_store.rule=Host(`leather_store.localhost`)"
+    volumes:
+      - ./media/:/var/www/html/media/
+    networks:
+      - proxy
+  database:
+    restart: always
+    image: postgres:18.3-alpine3.23
+    environment:
+      POSTGRES_DB: leather_store
+      POSTGRES_USER: habib
+      POSTGRES_PASSWORD: web
+    volumes:
+      - database_data:/var/lib/postgresql
+    networks:
+      - proxy
+volumes:
+  database_data:
+    driver: local
+networks:
+  proxy:
+    external: true
