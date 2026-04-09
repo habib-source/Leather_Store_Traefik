@@ -21,6 +21,10 @@ services:
       - .dockerenv
     labels:
       - "traefik.http.routers.leather_store.rule=Host(`leather_store.localhost`)"
+      - "traefik.http.services.leather_store.loadbalancer.sticky.cookie=true"
+      - "traefik.http.services.leather_store.loadbalancer.sticky.cookie.name=sticky_cookie"
+      - "traefik.http.services.leather_store.loadbalancer.sticky.cookie.secure=false"
+      - "traefik.http.services.leather_store.loadbalancer.sticky.cookie.httpOnly=true"
     volumes:
       - ./media/:/var/www/html/media/
     networks:
